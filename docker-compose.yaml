@@ -1,0 +1,56 @@
+services:
+    web:
+        container_name: NITDA-web-app-cont
+        build: ./services/web
+        restart: always
+        env_file:
+            - ./services/web/src/.env
+        ports:
+            - 3000:3000
+        healthcheck:
+            test: exit 0
+            retries: 3
+        depends_on:
+            api:
+                condition: service_healthy
+    api:
+        container_name: NITDA-api-cont
+        build: ./services/api
+        restart: always
+        healthcheck:
+            test: exit 0
+            retries: 3
+        env_file:
+            - ./services/api/.env
+        ports:
+            - 5000:5000
+        depends_on:
+            mongodb:
+                condition: service_healthy
+    mongodb:
+        restart: always
+        container_name: mongodb-cont
+        image: mongo:latest
+        healthcheck:
+            test: exit 0
+            retries: 3
+        env_file:
+            - ./services/api/.env
+
+        ports:
+            - 27017:27017
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+        volumes:
+            - NITDA-mongodb-data:/data/db
+volumes:
+    NITDA-mongodb-data:
+
+
+
+
+
+
+
+
