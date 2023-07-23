@@ -1,7 +1,9 @@
 services:
     web:
-        container_name: NITDA-web-app-cont
-        build: ./services/web
+        container_name: NITDA-web-app-cont-test
+        build:
+            context: ./services/web
+            dockerfile: Dockerfile.dev
         restart: always
         env_file:
             - ./services/web/src/.env
@@ -15,15 +17,16 @@ services:
                 condition: service_healthy
         volumes:
             - ./services/web/package.json:/usr/src/package.json
+
     api:
-        container_name: NITDA-api-cont
-        build: ./services/api
+        container_name: NITDA-api-cont-test
+        build:
+            context: ./services/api
+            dockerfile: Dockerfile.dev
         restart: always
         healthcheck:
             test: exit 0
             retries: 3
-        env_file:
-            - ./services/api/.env
         ports:
             - 5000:5000
         depends_on:
@@ -31,18 +34,30 @@ services:
                 condition: service_healthy
         volumes:
             - ./services/api/package.json:/usr/src/package.json
+
     mongodb:
         restart: always
-        container_name: mongodb-cont
+        container_name: mongodb-cont-test
         image: mongo:latest
         healthcheck:
             test: exit 0
             retries: 3
-
+        env_file:
+            - ./services/api/.env
         ports:
             - 27017:27017
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
         volumes:
-            - ./services/api/db_backup/mongodb:/data/db
+            - NITDA-mongodb-data-test:/data/db
+volumes:
+    NITDA-mongodb-data-test:
+
+
+
+
+
+
+
+

@@ -11,4 +11,4 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 COPY . /usr/src/app
 
-CMD [ "yarn", "run", "production" ]
+CMD [ "yarn", "dev" ]

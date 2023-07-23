@@ -26,7 +26,7 @@ Created to automate and keep track of interns (NYSC, SIWES and intern) for the N
 
 **Client:** React, Redux, TailwindCSS, MUI, nivo charts
 
-**Server:** Node, Express
+**Server:** Node, Express, MongoDB
 
 **Others:** Docker
 
@@ -45,13 +45,13 @@ Go to the project directory
   cd nitda-intern
 ```
 
-Provide all values in the `./test.env`, `./services/web/src/test.env` and `./services/api/test.env` files and rename the files to `.env`
+Provide all values in the `./services/web/src/test.env` and `./services/api/test.env` files and rename the files to `.env`
 
 
 Start all services by running the command below
 
 ```bash
-  docker compose up --build --no-recreate
+  docker compose up --build --no-recreate --env-file ./services/api/.env
 ```
 
 
@@ -72,8 +72,6 @@ Start all services by running the command below
 ## Environment Variables
 
 To run this project, you will need to populate the `test.env` and rename it to `.env` found in the following directories:
-
-`./test.env`
 
 `./services/web/src/test.env`
 

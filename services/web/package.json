@@ -15,7 +15,7 @@
     "@mui/material": "^5.12.2",
     "@mui/x-data-grid": "^6.3.0",
     "@nivo/bar": "^0.81.0",
-    "@nivo/core": "^0.81.0",
+    "@nivo/core": "^0.83.0",
     "@nivo/line": "^0.81.0",
     "@nivo/pie": "^0.81.0",
     "@reduxjs/toolkit": "^1.9.5",
@@ -23,8 +23,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/react": "^18.0.35",
-    "@types/react-dom": "^18.0.11",
     "axios": "^1.4.0",
     "dotenv": "^16.0.3",
     "formik": "^2.2.9",
@@ -37,9 +35,11 @@
     "yup": "^1.1.1"
   },
   "scripts": {
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "dev": "npx vite --port 3000 --host 0.0.0.0",
-    "build": "tsc && vite build",
-    "serve": "vite preview"
+    "build": "npx tsc && npx vite build",
+    "serve": "npx vite preview --host 0.0.0.0 --port 3000",
+    "production": "yarn run build && yarn run serve"
   },
   "eslintConfig": {
     "extends": [
@@ -61,9 +61,16 @@
   },
   "devDependencies": {
     "@types/node": "^20.1.4",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
     "typescript": "^5.0.2",
-    "vite": "^4.3.5",
+    "vite": "^4.4.5",
     "vite-plugin-svgr": "^3.2.0",
     "vite-tsconfig-paths": "^4.2.0"
   }

@@ -24,7 +24,7 @@ export const LoginForm = (props: {
   handleLoginFormSubmit(values: {}): void;
 }) => {
   const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
-  let inputFieldStyle = sx(iconColor || textColor);
+  const inputFieldStyle = sx(iconColor || textColor);
 
   const loginSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -161,7 +161,7 @@ export const ConfirmPasswordChangeForm = (props: {
   handleLoginFormSubmit(values: {}): void;
 }) => {
   const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
-  let inputFieldStyle = sx(iconColor || textColor);
+  const inputFieldStyle = sx(iconColor || textColor);
 
   const confirmPasswordSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -377,7 +377,7 @@ export const RequestChangePassword = (props: {
   handleLoginFormSubmit(values: {}): void;
 }) => {
   const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
-  let inputFieldStyle = sx(iconColor || textColor);
+  const inputFieldStyle = sx(iconColor || textColor);
 
   const loginSchema = yup.object().shape({
     email: yup

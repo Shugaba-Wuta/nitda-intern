@@ -22,7 +22,7 @@ interface IColorSchema {
 
 
 export const tokens = (mode: string): IColorSchema => {
-    let schemes: { dark: IColorSchema, light: IColorSchema } = {
+    const schemes: { dark: IColorSchema, light: IColorSchema } = {
         dark: {
 
             green: {
