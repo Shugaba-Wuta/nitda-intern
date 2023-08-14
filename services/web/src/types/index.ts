@@ -5,6 +5,6 @@ export interface IChildren {
 }
 export interface IGenericAPIResponse {
     message: string
-    result: any,
+    result: object,
     success: boolean
 }

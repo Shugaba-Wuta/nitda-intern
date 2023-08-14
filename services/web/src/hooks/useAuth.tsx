@@ -1,25 +1,27 @@
 import { createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
-import { IChildren } from "../types";
+import { IChildren } from "@src/types";
 
 interface IAuthContext {
   user: string | null;
-  login(data: {}): Promise<void>;
+  login(data: object): Promise<void>;
   logout(): Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext>({
   user: null,
-  login: async (data: {}) => {},
-  logout: async () => {},
+  login: async (data: object) => {
+    data
+  },
+  logout: async () => { },
 });
 
 export const AuthProvider = ({ children }: IChildren) => {
   const [user, setUser] = useLocalStorage("user", null);
   const navigate = useNavigate();
 
-  const login = async (data: {}) => {
+  const login = async (data: object) => {
     setUser(data);
     navigate("/home");
   };

@@ -17,7 +17,7 @@ export const APP_PORT = parseInt(process.env?.APP_PORT as string)
 export const COOKIE_SECRET = process.env?.COOKIE_SECRET
 export const NODE_ENV = process.env?.NODE_ENV as string
 export const JWT_TOKEN_SECRET = process.env?.JWT_TOKEN_SECRET as string
-export const MONGO_DB_URL = `mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb:${MONGO_PORT}` as string
+export const MONGO_DB_URL = `mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@${MONGO_DB_HOST}:${MONGO_PORT}/nitda-intern` as string
 
 export const MAILER_EMAIL_PASS = process.env?.MAILER_EMAIL_PASS as string
 export const MAILER_EMAIL_ADDRESS = process.env?.MAILER_EMAIL_ADDRESS as string

@@ -12,7 +12,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EmailOutlined from "@mui/icons-material/EmailOutlined";
 import * as yup from "yup";
 import { Formik } from "formik";
-import useLocalStorage from "../../../hooks/useLocalStorage";
+import useLocalStorage from "@hooks/useLocalStorage";
 
 import { inputFieldStyle as sx, primarySubmitBtnStyle } from "./FieldStyles";
 
@@ -21,7 +21,7 @@ export const LoginForm = (props: {
   iconColor: string;
   textColor: string;
   bgColor: string;
-  handleLoginFormSubmit(values: {}): void;
+  handleLoginFormSubmit(values: object): void;
 }) => {
   const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
   const inputFieldStyle = sx(iconColor || textColor);
@@ -120,7 +120,7 @@ export const LoginForm = (props: {
               endAdornment: (
                 <Tooltip title={passwordHidden ? "Show" : "Hide"}>
                   <IconButton
-                    onClick={(e) => {
+                    onClick={() => {
                       setPasswordHidden(!passwordHidden);
                     }}
                   >
@@ -158,7 +158,7 @@ export const ConfirmPasswordChangeForm = (props: {
   iconColor: string;
   textColor: string;
   bgColor: string;
-  handleLoginFormSubmit(values: {}): void;
+  handleLoginFormSubmit(values: object): void;
 }) => {
   const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
   const inputFieldStyle = sx(iconColor || textColor);
@@ -298,7 +298,7 @@ export const ConfirmPasswordChangeForm = (props: {
               endAdornment: (
                 <Tooltip title={passwordHidden ? "Show" : "Hide"}>
                   <IconButton
-                    onClick={(e) => {
+                    onClick={() => {
                       setPasswordHidden(!passwordHidden);
                     }}
                   >
@@ -341,7 +341,7 @@ export const ConfirmPasswordChangeForm = (props: {
               endAdornment: (
                 <Tooltip title={confirmPasswordHidden ? "Show" : "Hide"}>
                   <IconButton
-                    onClick={(e) => {
+                    onClick={() => {
                       setConfirmPasswordHidden(!confirmPasswordHidden);
                     }}
                   >
@@ -374,7 +374,7 @@ export const RequestChangePassword = (props: {
   iconColor: string;
   textColor: string;
   bgColor: string;
-  handleLoginFormSubmit(values: {}): void;
+  handleLoginFormSubmit(values: object): void;
 }) => {
   const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
   const inputFieldStyle = sx(iconColor || textColor);

@@ -7,7 +7,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { tokens } from "../../theme";
+import { tokens } from "@src/theme";
 
 export const Searchbar = () => {
   const theme = useTheme();

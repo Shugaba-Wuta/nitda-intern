@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useTitleChange } from "../hooks/useTitleChange";
-import nitdaHQ from "../components/static/nitda-hq.jpg";
-import nitdaTextLogo from "../components/static/nitda-cropped-logo.png";
-import { tokens } from "../theme";
+import WestIcon from '@mui/icons-material/West';
+import EastIcon from '@mui/icons-material/East';
+import { useTitleChange } from "@hooks/useTitleChange";
+import nitdaHQ from "@static/nitda-hq.jpg";
+import nitdaTextLogo from "@static/nitda-cropped-logo.png";
+import { tokens } from "@src/theme";
 import {
   ConfirmPasswordChangeForm,
   LoginForm,
   RequestChangePassword,
-} from "./partials/forms/Login";
+} from "@components/login-form/Login";
 
 interface ILoginAllFields {
   email?: string;
@@ -126,11 +128,14 @@ const Login = ({ title }: { title: string }) => {
         <Box mt={"4rem"}>
           {/*  Glassmorphism footer navigation */}
           {currentFormType === FORM_TYPE.LOGIN && (
-            <Typography>
-              Forgot password?{" "}
+            <Typography sx={{
+              display: "flex",
+            }}>
+              Forgot password?{""}
               <Box
                 component={"a"}
                 sx={{
+                  ml: "5px",
                   cursor: "pointer",
                   ":hover": {
                     color: colors.green[300],
@@ -144,6 +149,7 @@ const Login = ({ title }: { title: string }) => {
               >
                 Click here
               </Box>
+              <EastIcon sx={{ marginLeft: "3px" }} />
             </Typography>
           )}
 
@@ -153,6 +159,7 @@ const Login = ({ title }: { title: string }) => {
                 <Box
                   component={"a"}
                   sx={{
+                    display: "flex",
                     cursor: "pointer",
                     p: "0.25rem",
                     ":hover": {
@@ -165,33 +172,37 @@ const Login = ({ title }: { title: string }) => {
                     setCurrentFormType(FORM_TYPE.LOGIN);
                   }}
                 >
-                  Back to login
+                  <WestIcon sx={{ align: "center", justifyItems: "center", marginRight: "5px" }} />Back to login
                 </Box>
               </Typography>
-              <Typography
-                sx={{
-                  fontSize: "0.8rem",
-                  p: "0.25rem",
-                  opacity: 0.75,
-                  fontStyle: "italic",
-                }}
-              >
-                <Box
-                  component={"a"}
+              {/* // Hides "Have OTP Code" on the Reset form screen */}
+              {(currentFormType !== FORM_TYPE.CHANGE_PASSWORD) &&
+
+                <Typography
                   sx={{
-                    cursor: "pointer",
-                    ":hover": {
-                      color: colors.green[300],
-                      textDecoration: "underline",
-                    },
-                  }}
-                  onClick={() => {
-                    setCurrentFormType(FORM_TYPE.CHANGE_PASSWORD);
+                    fontSize: "0.8rem",
+                    p: "0.25rem",
+                    opacity: 0.75,
+                    fontStyle: "italic",
                   }}
                 >
-                  Have OTP Code?
-                </Box>
-              </Typography>
+                  <Box
+                    component={"a"}
+                    sx={{
+                      display: "flex",
+                      cursor: "pointer",
+                      ":hover": {
+                        color: colors.green[300],
+                        textDecoration: "underline",
+                      },
+                    }}
+                    onClick={() => {
+                      setCurrentFormType(FORM_TYPE.CHANGE_PASSWORD);
+                    }}
+                  >
+                    Have OTP Code? <EastIcon fontSize="small" sx={{ ml: "5px" }} />
+                  </Box>
+                </Typography>}
             </>
           )}
         </Box>

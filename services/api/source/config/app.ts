@@ -20,7 +20,7 @@ import { attachUserToRequest } from '../middleware/auth'
 import authRouter from "../routers/auth-route"
 import userRouter from "../routers/user-route"
 import payrollRouter from "../routers/payroll-route"
-import { MAX_FILE_UPLOAD_IN_MB } from "./data"
+import { ALLOWED_ORIGINS, MAX_FILE_UPLOAD_IN_MB } from "./data"
 import { APP_PORT, COOKIE_SECRET, MONGO_DB_URL } from '.'
 
 const app = express()
@@ -29,9 +29,8 @@ app.set("trust-proxy", 1)
 //Top-level middlewares
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: ALLOWED_ORIGINS, credentials: true }));
 app.use(xss());
-app.use(cors())
 app.use(express.json());
 app.use(cookieParser(COOKIE_SECRET))
 

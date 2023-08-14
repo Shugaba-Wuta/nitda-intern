@@ -1,5 +1,5 @@
 import { createContext, useState, useMemo } from "react";
-import { createTheme, ThemeOptions } from "@mui/material/styles";
+import { createTheme, Theme } from "@mui/material/styles";
 interface IColorSchema {
     green: {
         [key: number]: string
@@ -160,7 +160,6 @@ export const themeSettings = (mode: string) => {
     const colors = tokens(mode)
     return {
         palette: {
-            mode: mode,
             ...(mode === "dark"
                 ? {
                     primary: {
@@ -231,7 +230,7 @@ export const ColorModeContext = createContext({
     toggleColorMode: () => { }
 })
 
-export const useMode = () => {
+export function useMode(): [Theme, { toggleColorMode: () => void }] {
     const [mode, setMode] = useState("light")
 
     const colorMode = useMemo(
@@ -241,7 +240,7 @@ export const useMode = () => {
             }
         }), [])
 
-    const theme = useMemo(() => { return createTheme(themeSettings(mode) as ThemeOptions) }, [mode])
+    const theme = useMemo(() => { return createTheme(themeSettings(mode)) }, [mode])
     return [theme, colorMode]
 
 }

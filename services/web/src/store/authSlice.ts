@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { useAxios } from "../hooks/useAxios";
-import { IDecodedUserInfo } from "../types/auth";
-import { useAppDispatch, useAppSelector } from ".";
+import { useAxios } from "@hooks/useAxios";
+import { IDecodedUserInfo } from "@types/auth";
+import { useAppDispatch } from ".";
 import { addNewError } from "./errorSlice";
 
 //Types and interfaces
