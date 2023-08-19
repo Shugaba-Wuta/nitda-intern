@@ -53,6 +53,7 @@ export const LoginForm = (props: {
         handleBlur,
         handleChange,
         handleSubmit,
+        isSubmitting
       }) => (
         <Box
           component={"form"}
@@ -142,6 +143,7 @@ export const LoginForm = (props: {
             role="button"
             value="Login"
             id="submit"
+            disabled={isSubmitting}
             sx={{
               ...primarySubmitBtnStyle(bgColor, textColor),
               mt: "2rem",

@@ -1,1 +1,8 @@
 node_modules
+README.md
+.vscode
+yarn.lock
+yarn-error.log
+build/**/*
+db_backup/**/*
+test.env

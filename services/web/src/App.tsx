@@ -7,6 +7,7 @@ import { store } from "@src/store";
 import LoginPage from "@pages/login/Login";
 // import Sidebar from "@components/Sidebar";
 // import Topbar from "@components/Topbar";
+// import { useAuth } from "@src/hooks/useAuth";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -20,12 +21,6 @@ function App() {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <div className="app">
-              <Routes>
-                {/* <Sidebar />
-          <Box width={"100%"} height={"100%"}>
-            <Topbar />
-          </Box> */}
-              </Routes>
               <Routes>
                 <Route path="/" element={<LoginPage title="Login" />}></Route>
               </Routes>

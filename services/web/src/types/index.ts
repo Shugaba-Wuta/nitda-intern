@@ -7,4 +7,5 @@ export interface IGenericAPIResponse {
     message: string
     result: object,
     success: boolean
+    error?: boolean
 }

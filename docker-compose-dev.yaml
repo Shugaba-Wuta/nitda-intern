@@ -5,6 +5,15 @@ services:
             context: ./services/web
             dockerfile: Dockerfile.dev
         restart: always
+        x-develop:
+            watch:
+                - path: ./services/web/src/
+                  target: app/src/
+                  action: sync
+                  ignore:
+                      - /services/web/node_modules
+                - path: /src/package.json
+                  action: rebuild
         env_file:
             - ./services/web/src/.env
         ports:
@@ -24,11 +33,22 @@ services:
             context: ./services/api
             dockerfile: Dockerfile.dev
         restart: always
+        hostname: api
+        x-develop:
+            watch:
+                - path: ./services/api/source/
+                  target: source/
+                  action: sync
+                  ignore:
+                      - ./services/api/node_modules
+                - path: /src/package.json
+                  action: rebuild
         healthcheck:
             test: exit 0
             retries: 3
         ports:
             - 5000:5000
+            - 8000:8000
         depends_on:
             mongodb:
                 condition: service_healthy
@@ -39,6 +59,7 @@ services:
         restart: always
         container_name: mongodb-cont-test
         image: mongo:latest
+        hostname: mongodb
         healthcheck:
             test: exit 0
             retries: 3
@@ -49,8 +70,10 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+            MONGO_INITDB_DATABASE: ${MONGO_DB_DBNAME}
         volumes:
             - NITDA-mongodb-data-test:/data/db
+            - ./docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 volumes:
     NITDA-mongodb-data-test:
 

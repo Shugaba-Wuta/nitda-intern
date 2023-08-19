@@ -11,14 +11,26 @@ import {
   LoginForm,
   RequestChangePassword,
 } from "@components/login-form/Login";
+import axios from "@src/utils/axiosConfig";
+import errorHandler from "@src/utils/errorHandler";
+import { AxiosError } from "axios";
+import { IGenericAPIResponse } from "@src/types";
 
-interface ILoginAllFields {
-  email?: string;
-  password?: string;
-  newPassword?: string;
-  confirmPassword?: string;
-  otpCode?: string;
+interface ILoginData {
+  email: string;
+  password: string;
 }
+// interface IStartResetPasswordData {
+//   email: string;
+// }
+// interface IResetPasswordData {
+//   email: string;
+//   otpCode: string;
+//   newPassword: string;
+//   confirmPassword?: string;
+
+// }
+
 
 const Login = ({ title }: { title: string }) => {
   const theme = useTheme();
@@ -32,12 +44,13 @@ const Login = ({ title }: { title: string }) => {
   };
 
   useTitleChange(title);
-  const handleLoginFormSubmit = (values: ILoginAllFields) => {
-    if (FORM_TYPE.LOGIN === currentFormType) {
-      console.log("Login");
+  const handleLoginFormSubmit = async (values: ILoginData) => {
+    try {
+      const res = await axios.post<IGenericAPIResponse>('/auth/login', values)
+      console.log(res.data, "res.data")
+    } catch (error) {
+      errorHandler(error as AxiosError)
     }
-
-    console.log(JSON.stringify(values));
   };
 
   return (

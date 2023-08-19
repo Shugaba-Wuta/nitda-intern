@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { useAxios } from "@hooks/useAxios";
-import { IDecodedUserInfo } from "@types/auth";
+import { IDecodedUserInfo } from "@src/types/auth";
 import { useAppDispatch } from ".";
 import { addNewError } from "./errorSlice";
+import axios from "@utils/axiosConfig"
 
 //Types and interfaces
 
@@ -35,7 +35,7 @@ const initialState: IInitialState = {
 const loginThunk = createAsyncThunk("/auth/login", async ({ password, email }: ILoginCredentials, { rejectWithValue }) => {
     try {
 
-        const response = await useAxios.post("/auth/login", { password, email })
+        const response = await axios.post("/auth/login", { password, email })
         return response.data.result as { accessToken: string }
     } catch (err) {
         rejectWithValue(err)
@@ -59,7 +59,8 @@ const { reducer, } = createSlice({
                     state.status = "loggedInFailed"
                 }
             })
-            .addCase(loginThunk.pending, (state, action) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .addCase(loginThunk.pending, (state, _action) => {
                 state.status = "loading"
             })
             .addCase(loginThunk.rejected, (state, action) => {
