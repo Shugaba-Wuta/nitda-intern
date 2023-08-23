@@ -2,7 +2,7 @@ import { createTestAccount, createTransport } from "nodemailer"
 import hbs from "nodemailer-express-handlebars"
 import Mail, { Options } from "nodemailer/lib/mailer";
 import { CustomAPIError } from "../errors";
-import { MAILER_EMAIL_ADDRESS, MAILER_EMAIL_PASS, NODE_ENV } from "../config";
+import { MAILER_EMAIL_ADDRESS, MAILER_EMAIL_PASS, TEST_ENV } from "../config";
 
 type ExtendedOptions = Options & { template: string, context: object };
 
@@ -76,4 +76,4 @@ class SysEmail {
 }
 
 
-export default new SysEmail({}, NODE_ENV === "DEV")
+export default new SysEmail({}, TEST_ENV)

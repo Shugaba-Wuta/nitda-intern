@@ -8,7 +8,7 @@ import { ADMIN_ROLE, COOKIE_DURATION, DEPARTMENT_ROLE, HR_ROLE } from "../config
 import { retrieveAndValidateToken } from "../middleware/auth"
 import { getAnyUser } from "../utils/model-utils";
 import ms from "ms"
-import { NODE_ENV } from "../config";
+import { TEST_ENV } from "../config";
 
 
 
@@ -37,7 +37,7 @@ export const login = async (req: IRequest, res: Response) => {
     const cookie = createJWT(payload, "cookie")
     const accessToken = createJWT(payload, "token")
 
-    res.cookie("user", cookie, { maxAge: ms(COOKIE_DURATION), secure: NODE_ENV !== "DEV" ? true : false, httpOnly: true, signed: true })
+    res.cookie("user", cookie, { maxAge: ms(COOKIE_DURATION), secure: !TEST_ENV ? true : false, httpOnly: true, signed: true })
 
     res.status(StatusCodes.OK).json({ message: "Login successful", result: { accessToken }, success: true })
 

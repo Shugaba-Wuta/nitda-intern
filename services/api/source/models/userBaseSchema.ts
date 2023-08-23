@@ -5,6 +5,7 @@ import { IIntern, INysc, IStaff, ISiwes } from "models"
 import { ADMIN_ROLE, DEPARTMENT_ROLE, HR_ROLE, UserTypes } from "../config/data"
 import { OTP } from "../models"
 import Mailer from "../mailing/mailer"
+import { TEST_ENV } from "../config"
 
 
 
@@ -67,7 +68,7 @@ userBaseSchema.methods.startPassResetFlow = async function (options: startPassRe
     const schema: string = [ADMIN_ROLE, HR_ROLE, DEPARTMENT_ROLE].includes(this.role) ? "Staff" : this.role
     const otp = await OTP.createAToken(String(this._id), schema, "PASSWORD-CHANGE", this.email)
 
-    await Mailer.sendEmail(this.email, "Admin", { email: this.email, firstName: this.firstName, OTPCode: otp, sessionID: options.sessionID, IPAddress: options.IPAddress, userAgent: options.userAgent }, "password-reset", "Password reset otp",)
+    if (!TEST_ENV) await Mailer.sendEmail(this.email, "Admin", { email: this.email, firstName: this.firstName, OTPCode: otp, sessionID: options.sessionID, IPAddress: options.IPAddress, userAgent: options.userAgent }, "password-reset", "Password reset otp",)
 
     return otp
 

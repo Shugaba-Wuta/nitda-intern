@@ -2,15 +2,15 @@ FROM node:bullseye-slim
 
 ENV NODE_ENV=production
 
-WORKDIR /usr/src
+WORKDIR /usr/app
 
-ADD package.json /usr/src/package.json
+ADD package.json /usr/app/package.json
 
 RUN yarn install
 
-# add `/usr/src/node_modules/.bin` to $PATH
-ENV PATH /usr/src/node_modules/.bin:$PATH
+# add `/usr/app/node_modules/.bin` to $PATH
+ENV PATH /usr/app/node_modules/.bin:$PATH
 
-COPY . /usr/src
+COPY . /usr/app
 
 CMD [ "yarn", "run", "dev" ]

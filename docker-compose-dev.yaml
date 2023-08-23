@@ -8,11 +8,11 @@ services:
         x-develop:
             watch:
                 - path: ./services/web/src/
-                  target: app/src/
+                  target: /usr/app/src
                   action: sync
                   ignore:
-                      - /services/web/node_modules
-                - path: /src/package.json
+                      - ./services/web/node_modules
+                - path: ./services/web/package.json
                   action: rebuild
         env_file:
             - ./services/web/src/.env
@@ -25,7 +25,7 @@ services:
             api:
                 condition: service_healthy
         volumes:
-            - ./services/web/package.json:/usr/src/package.json
+            - ./services/web/package.json:/usr/app/package.json
 
     api:
         container_name: NITDA-api-cont-test
@@ -37,11 +37,11 @@ services:
         x-develop:
             watch:
                 - path: ./services/api/source/
-                  target: source/
+                  target: /usr/app/source
                   action: sync
                   ignore:
                       - ./services/api/node_modules
-                - path: /src/package.json
+                - path: ./services/api/source/package.json
                   action: rebuild
         healthcheck:
             test: exit 0
@@ -53,7 +53,7 @@ services:
             mongodb:
                 condition: service_healthy
         volumes:
-            - ./services/api/package.json:/usr/src/package.json
+            - ./services/api/package.json:/usr/app/package.json
 
     mongodb:
         restart: always

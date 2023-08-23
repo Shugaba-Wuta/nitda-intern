@@ -11,6 +11,7 @@ import { formatTemplate, generateSlug, saveFileToServer } from "../utils/generic
 import stream from "stream"
 import { UploadedFile } from "express-fileupload";
 import fs from "fs"
+import { TEST_ENV } from "../config";
 
 
 export const createAUser = async (req: IRequest, res: Response) => {
@@ -39,7 +40,7 @@ export const createAUser = async (req: IRequest, res: Response) => {
         const permissions = (userData.role === ADMIN_ROLE) ? "admin" : userData.permissions
         newUser = await new Staff({ ...userData, permissions }).save()
         //Mail Staff
-        await Mailer.sendEmail(userData.email, "Admin", { email: userData.email, firstName: userData.firstName, role: String(userData.role).toUpperCase(), password: userData.password }, "new-account-creation", "Welcome to Intern Portal",)
+        if (TEST_ENV) await Mailer.sendEmail(userData.email, "Admin", { email: userData.email, firstName: userData.firstName, role: String(userData.role).toUpperCase(), password: userData.password }, "new-account-creation", "Welcome to Intern Portal",)
 
         return res.status(StatusCodes.CREATED)
             .json({ message: "Staff created", result: { newUser }, success: true })

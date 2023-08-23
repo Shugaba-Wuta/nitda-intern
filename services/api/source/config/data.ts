@@ -6,6 +6,7 @@ export const ALLOWED_ORIGINS = [
 export const GENDERS = ["M", "F"]
 
 export const QUALIFICATION = ["BSc.", "MSc.", "BEng.", "MEng.", "BA", "PhD.", "HND", "LLB"]
+export const CLASS_OF_DEGREE = ["First Class", "Second Class Upper", "Second Class Lower", "Third Class", "Pass", "Distinction", "Upper Credit", "Lower Credit", "Merit", "Not Applicable"]
 
 export const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
@@ -57,6 +58,8 @@ export enum UserTypes {
     Intern = "Intern",
     Staff = "Staff"
 }
+
+export const ALL_DEPT = ["HR", "ITIS", "CS", "SGF", "FMC", "CPS", "EGDR", "DED", "DLCD", "R&D"]
 //OTP
 export const MAX_OTP_TIME = 10
 export const MAX_OTP_TIME_IN_SECONDS = 60 * MAX_OTP_TIME

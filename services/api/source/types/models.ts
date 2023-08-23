@@ -45,7 +45,7 @@ export interface IInternBase extends IUserBase {
     expectedEndDate: Date,
     startDate: Date,
     onPayroll: boolean,
-    dateAddedOnPayroll: Date,
+    dateAddedOnPayroll?: Date,
     schoolOfStudy: string,
     courseOfStudy: string,
     readonly duration?: string

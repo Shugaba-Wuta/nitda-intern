@@ -14,7 +14,7 @@ services:
             api:
                 condition: service_healthy
         volumes:
-            - ./services/web/package.json:/usr/src/package.json
+            - ./services/web/package.json:/usr/app/package.json
     api:
         container_name: NITDA-api-cont
         build: ./services/api
@@ -30,7 +30,7 @@ services:
             mongodb:
                 condition: service_healthy
         volumes:
-            - ./services/api/package.json:/usr/src/package.json
+            - ./services/api/package.json:/usr/app/package.json
     mongodb:
         restart: always
         container_name: mongodb-cont

@@ -21,7 +21,9 @@ import authRouter from "../routers/auth-route"
 import userRouter from "../routers/user-route"
 import payrollRouter from "../routers/payroll-route"
 import { ALLOWED_ORIGINS, MAX_FILE_UPLOAD_IN_MB } from "./data"
-import { APP_PORT, COOKIE_SECRET, MONGO_DB_URL } from '.'
+import { APP_PORT, COOKIE_SECRET, MONGO_DB_URL, TEST_ENV } from '.'
+import { createAdminAcct } from "../db/create-admin"
+import { createDummyData } from "../db/create-mock-users"
 
 const app = express()
 app.set("trust-proxy", 1)
@@ -74,9 +76,17 @@ const startApp = async () => {
         app.listen(APP_PORT, async () => {
             console.log(`Server is running on Port: ${APP_PORT} ......................................`)
         })
+        // Create an admin account if it does not exists
+        await createAdminAcct()
+        // Create dummy data for test ENV
+        if (TEST_ENV) {
+            await createDummyData(["Intern", "Siwes", "Nysc", "Staff"])
+        }
+
     } catch (error) {
         console.log(error)
     }
+
 
 }
 
