@@ -39,7 +39,7 @@ export const loginThunk = createAsyncThunk("/auth/login", async ({ password, ema
         const response = await axios.post("/auth/login", { password, email })
         const decodedToken: IDecodedUserInfo = jwtDecode(response.data.result.accessToken)
         alertHandler({ message: "Login Successful", title: " ", type: "success" })
-        return { accessToken: response.data.result, decodedToken }
+        return { accessToken: response.data.result.accessToken, decodedToken }
     } catch (error) {
         alertHandler(error as AxiosError)
     }
@@ -49,7 +49,7 @@ export const refreshThunk = createAsyncThunk("/auth/refresh", async (_, { reject
     try {
         const response = await axios.post("/auth/refresh")
         const decodedToken: IDecodedUserInfo = jwtDecode(response.data.result.refreshToken)
-        return { accessToken: response.data.result, decodedToken }
+        return { accessToken: response.data.result.accessToken, decodedToken }
     } catch (err) {
         const error = err as AxiosError<IGenericAPIResponse>
         return rejectWithValue(error.response?.data.message || error.message)
@@ -91,6 +91,11 @@ const { reducer, } = createSlice({
                 state.success = true
                 state.userToken = action.payload.accessToken
                 state.userInfo = action.payload.decodedToken
+            })
+            .addCase(refreshThunk.pending, (state,) => {
+                state.status = "loading"
+                state.success = false
+                console.log("refreshing token")
             })
 
             .addCase(refreshThunk.rejected, (state) => {
