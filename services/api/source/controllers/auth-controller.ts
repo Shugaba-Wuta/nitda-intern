@@ -75,7 +75,7 @@ export const startResetPassword = async (req: IRequest, res: Response) => {
     res.status(StatusCodes.OK).json({ message: "Check email for OTP Code", success: true, result: null })
 }
 export const changePassword = async (req: IRequest, res: Response) => {
-    const { OTPCode, email, tokenPurpose: purpose, oldPassword, newPassword } = req.body
+    const { otpCode: OTPCode, email, tokenPurpose: purpose, oldPassword, newPassword } = req.body
     const user = await getAnyUser(false, true, email, "")
     let tokenValid = await OTP.verifyToken(OTPCode, purpose, email)
     if (oldPassword && user && await user.comparePassword(oldPassword)) {

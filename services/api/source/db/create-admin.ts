@@ -16,7 +16,7 @@ admin = {
     nitdaID: faker.string.alphanumeric({ length: 5, casing: "upper" }),
     active: true,
     department: "HR",
-    password: "test",
+    password: "test1234",
     deleted: false,
     deletedOn: undefined,
     changedPassword: true,
@@ -33,9 +33,9 @@ if (!TEST_ENV) {
 }
 
 export const createAdminAcct = async (adminInfo: CreateAdmin = admin) => {
-    const existingAdmin = await Staff.findOne({ email: adminInfo.email, deleted: false, active: true })
+    const existingAdmin = await Staff.findOne({ $or: [{ email: adminInfo.email, deleted: false, active: true }, { role: "Admin", active: true, deleted: false }] })
     if (existingAdmin) {
-        return
+        return "Admin already exists"
     }
 
     const newAdmin = await new Staff(adminInfo).save()

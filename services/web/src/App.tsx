@@ -5,6 +5,7 @@ import { ColorModeContext, useMode } from "@src/theme";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { store } from "@src/store";
 import LoginPage from "@pages/login/Login";
+import ErrorDisplay from "@components/AlertDisplay";
 // import Sidebar from "@components/Sidebar";
 // import Topbar from "@components/Topbar";
 // import { useAuth } from "@src/hooks/useAuth";
@@ -20,11 +21,12 @@ function App() {
         <ColorModeContext.Provider value={colorMode}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <div className="app">
-              <Routes>
-                <Route path="/" element={<LoginPage title="Login" />}></Route>
-              </Routes>
-            </div>
+            <ErrorDisplay />
+
+            <Routes>
+              <Route path="/" element={<LoginPage title="Login" />}>
+              </Route>
+            </Routes>
           </ThemeProvider>
         </ColorModeContext.Provider>
       </Provider>

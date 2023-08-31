@@ -7,7 +7,7 @@ import {
 } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
-import sideBarBG from ".@static/nitda-ball.png";
+import sideBarBG from "@static/nitda-ball.png";
 import { tokens } from "@src/theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";

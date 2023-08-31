@@ -11,31 +11,17 @@ import {
   LoginForm,
   RequestChangePassword,
 } from "@components/login-form/Login";
-import axios from "@src/utils/axiosConfig";
-import errorHandler from "@src/utils/errorHandler";
-import { AxiosError } from "axios";
-import { IGenericAPIResponse } from "@src/types";
-
-interface ILoginData {
-  email: string;
-  password: string;
-}
-// interface IStartResetPasswordData {
-//   email: string;
-// }
-// interface IResetPasswordData {
-//   email: string;
-//   otpCode: string;
-//   newPassword: string;
-//   confirmPassword?: string;
-
-// }
+import { ILoginPayload, IResetPasswordPayload } from "@src/types/auth";
+import { loginThunk } from "@src/store/authSlice";
+import { useAppDispatch } from "@src/store";
+import { passwordRequestOTPByEmail, resetPasswordByOTP } from "@utils/services";
 
 
 const Login = ({ title }: { title: string }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [currentFormType, setCurrentFormType] = useState(title);
+  const dispatch = useAppDispatch();
 
   const FORM_TYPE = {
     RESET_PASSWORD: "Reset Password",
@@ -44,15 +30,20 @@ const Login = ({ title }: { title: string }) => {
   };
 
   useTitleChange(title);
-  const handleLoginFormSubmit = async (values: ILoginData) => {
-    try {
-      const res = await axios.post<IGenericAPIResponse>('/auth/login', values)
-      console.log(res.data, "res.data")
-    } catch (error) {
-      errorHandler(error as AxiosError)
-    }
+
+  const handleLoginFormSubmit = async (values: ILoginPayload) => {
+    dispatch(loginThunk(values));
   };
 
+  const handleForgotPasswordFormSubmit = async (values: { email: string }) => {
+    const { email } = values;
+    passwordRequestOTPByEmail(email);
+  };
+  const handleResetPasswordFormSubmit = async (values: Omit<IResetPasswordPayload, "tokenPurpose">) => {
+
+    await resetPasswordByOTP({ ...values, tokenPurpose: "PASSWORD-CHANGE" })
+
+  }
   return (
     // Background setup
     <Box
@@ -73,7 +64,7 @@ const Login = ({ title }: { title: string }) => {
       <Box
         sx={{
           // height: "60%",
-          maxWidth: "600px",
+          maxWidth: "1600px",
           minHeight: "fit-content",
           background: "rgba(255, 255, 255, 0.5)",
           boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
@@ -125,7 +116,7 @@ const Login = ({ title }: { title: string }) => {
               iconColor={colors.gray[100]}
               textColor={colors.gray[900]}
               bgColor={colors.green[100]}
-              handleLoginFormSubmit={handleLoginFormSubmit}
+              handleLoginFormSubmit={handleResetPasswordFormSubmit}
             />
           )}
 
@@ -134,7 +125,7 @@ const Login = ({ title }: { title: string }) => {
               iconColor={colors.gray[100]}
               textColor={colors.gray[900]}
               bgColor={colors.green[100]}
-              handleLoginFormSubmit={handleLoginFormSubmit}
+              handleLoginFormSubmit={handleForgotPasswordFormSubmit}
             />
           )}
         </Box>

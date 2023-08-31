@@ -5,7 +5,7 @@ export interface IChildren {
 }
 export interface IGenericAPIResponse {
     message: string
-    result: object,
+    result: object | object[],
     success: boolean
     error?: boolean
 }

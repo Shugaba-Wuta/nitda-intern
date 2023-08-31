@@ -14,6 +14,8 @@ services:
                       - ./services/web/node_modules
                 - path: ./services/web/package.json
                   action: rebuild
+                - path: ./services/web/src/.env
+                  action: rebuild
         env_file:
             - ./services/web/src/.env
         ports:
@@ -42,6 +44,8 @@ services:
                   ignore:
                       - ./services/api/node_modules
                 - path: ./services/api/source/package.json
+                  action: rebuild
+                - path: ./services/api/.env
                   action: rebuild
         healthcheck:
             test: exit 0
