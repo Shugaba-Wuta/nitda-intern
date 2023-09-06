@@ -3,7 +3,6 @@ import {
   Menu,
   MenuItem,
   Sidebar as ProSidebar,
-  useProSidebar,
 } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -18,11 +17,12 @@ import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import WestOutlinedIcon from "@mui/icons-material/WestOutlined";
 import EastOutlinedIcon from "@mui/icons-material/EastOutlined";
 
-const Sidebar = () => {
+const SideNavigation = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [selected, setSelected] = useState("Home");
-  const { collapseSidebar, collapsed } = useProSidebar();
+  // const { setIsCollapsed, isCollapsed } = useState();
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const hexToRgba = (hex: string, alpha: number) => {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -65,6 +65,7 @@ const Sidebar = () => {
           sideBarBG && theme.palette.mode === "dark" ? 0.95 : 0.1
         )}`}
         breakPoint="xs"
+        collapsed={isCollapsed}
       >
         <Menu
           menuItemStyles={{
@@ -86,15 +87,15 @@ const Sidebar = () => {
           {/* Menu icon */}
           <MenuItem
             onClick={() => {
-              collapseSidebar(!collapsed);
+              setIsCollapsed(!isCollapsed);
             }}
-            icon={collapsed && <EastOutlinedIcon />}
+            icon={isCollapsed && <EastOutlinedIcon />}
             style={{
               margin: "10px 0 10px 0",
               color: colors.gray[100],
             }}
           >
-            {!collapsed && (
+            {!isCollapsed && (
               <Box
                 display="flex"
                 justifyContent="space-between"
@@ -106,7 +107,7 @@ const Sidebar = () => {
                 </Typography>
                 <IconButton
                   onClick={() => {
-                    collapseSidebar(!collapsed);
+                    setIsCollapsed(!isCollapsed);
                   }}
                 >
                   <WestOutlinedIcon />
@@ -115,7 +116,7 @@ const Sidebar = () => {
             )}
           </MenuItem>
           {/* Menu items */}
-          <Box paddingLeft={collapsed ? "10%" : "0"}>
+          <Box paddingLeft={isCollapsed ? "10%" : "0"}>
             <Item
               title="Home"
               to="/home"
@@ -196,4 +197,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SideNavigation;
