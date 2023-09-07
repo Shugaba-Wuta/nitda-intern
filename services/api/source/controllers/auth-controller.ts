@@ -4,7 +4,7 @@ import { IRequest } from "request";
 import { BadRequestError, NotFoundError, UnauthenticatedError } from "../errors";
 import { StatusCodes } from "http-status-codes";
 import { createJWT } from "../utils/jwt";
-import { ADMIN_ROLE, COOKIE_DURATION, DEPARTMENT_ROLE, HR_ROLE } from "../config/data";
+import {  COOKIE_DURATION, DEPARTMENT_ROLE, HR_ROLE } from "../config/data";
 import { retrieveAndValidateToken } from "../middleware/auth"
 import { getAnyUser } from "../utils/model-utils";
 import ms from "ms"
@@ -29,7 +29,7 @@ export const login = async (req: IRequest, res: Response) => {
     }
 
     //Create new session
-    const userSchema = [ADMIN_ROLE, HR_ROLE, DEPARTMENT_ROLE].includes(user.role) ? "Staff" : user.role
+    const userSchema = [ HR_ROLE, DEPARTMENT_ROLE].includes(user.role) ? "Staff" : user.role
     const session = await new Session({ user: userID, ip: req.ips || req.ip, userSchema, userAgent: req.headers["user-agent"] }).save()
     const payload = { userID, role, permissions, email, sessionID: String(session._id) }
 

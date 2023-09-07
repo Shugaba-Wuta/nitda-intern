@@ -10,7 +10,7 @@ let admin: CreateAdmin
 admin = {
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName("male"),
-    role: "Admin",
+    role: "Staff",
     permissions: ["admin"],
     email: faker.internet.email(),
     nitdaID: faker.string.alphanumeric({ length: 5, casing: "upper" }),
@@ -33,7 +33,7 @@ if (!TEST_ENV) {
 }
 
 export const createAdminAcct = async (adminInfo: CreateAdmin = admin) => {
-    const existingAdmin = await Staff.findOne({ $or: [{ email: adminInfo.email, deleted: false, active: true }, { role: "Admin", active: true, deleted: false }] })
+    const existingAdmin = await Staff.findOne({ $or: [{ email: adminInfo.email, deleted: false, active: true }, { active: true, deleted: false }, { permissions: { $elemMatch: "admin" }, active: true, deleted: false }] })
     if (existingAdmin) {
         return "Admin already exists"
     }

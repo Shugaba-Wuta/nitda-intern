@@ -3,7 +3,7 @@ import { Response } from "express"
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../errors";
 import { Staff, Nysc, Siwes, Intern, Account, NextOfKin, Session, Documents } from "../models";
 import { IStaff, INysc, ISiwes, IIntern, INextOfKin, IAccount } from "../types/models"
-import { MAX_RESULT_LIMIT, USER_SORT_OPTION, IMMUTABLE_USER_FIELD, USER_ROLE_LEVEL3, ADMIN_ROLE, HR_ROLE, DEPARTMENT_ROLE, ADMIN_ONLY_MUTABLE_FIELDS, DEPARTMENT_ONLY_MUTABLE_FIELDS, USER_NYSC, USER_SIWES, USER_INTERN, USER_STAFF } from "../config/data"
+import { MAX_RESULT_LIMIT, USER_SORT_OPTION, IMMUTABLE_USER_FIELD, USER_ROLE_LEVEL3, HR_ROLE, DEPARTMENT_ROLE, ADMIN_ONLY_MUTABLE_FIELDS, DEPARTMENT_ONLY_MUTABLE_FIELDS, USER_NYSC, USER_SIWES, USER_INTERN, USER_STAFF } from "../config/data"
 import { StatusCodes } from "http-status-codes";
 import mongoose, { Schema } from "mongoose"
 import Mailer from "../mailing/mailer";
@@ -12,7 +12,6 @@ import stream from "stream"
 import { UploadedFile } from "express-fileupload";
 import fs from "fs"
 import { TEST_ENV } from "../config";
-
 
 export const createAUser = async (req: IRequest, res: Response) => {
     /**
@@ -35,10 +34,9 @@ export const createAUser = async (req: IRequest, res: Response) => {
     var newUser: IStaff | INysc | ISiwes | IIntern
     var newAccount: IAccount
     var newNOK: INextOfKin
-    if ([ADMIN_ROLE, HR_ROLE, DEPARTMENT_ROLE].includes(userSchema)) {
+    if (userSchema === USER_STAFF) {
         //Get the appropriate permission
-        const permissions = (userData.role === ADMIN_ROLE) ? "admin" : userData.permissions
-        newUser = await new Staff({ ...userData, permissions }).save()
+        newUser = await new Staff({ ...userData }).save()
         //Mail Staff
         if (TEST_ENV) await Mailer.sendEmail(userData.email, "Admin", { email: userData.email, firstName: userData.firstName, role: String(userData.role).toUpperCase(), password: userData.password }, "new-account-creation", "Welcome to Intern Portal",)
 
@@ -100,7 +98,7 @@ export const searchUser = async (req: IRequest, res: Response) => {
 
     var { query, includeStaff: staff = false, schemas, deleted = false, active = true, sortBy = "relevance", pageNumber = 1, limit } = req.query
     //set default params for non-admin and non-HR  query params
-    if (req.user && !req.user.permissions.includes(ADMIN_ROLE.toLowerCase())) {
+    if (req.user && !req.user.permissions.includes(USER_STAFF.toLowerCase())) {
         active = true
         staff = false
         deleted = false
@@ -245,7 +243,7 @@ export const permanentlyDeleteUser = async (req: IRequest, res: Response) => {
      */
     const { schema } = req.body
     const { userID } = req.params
-    if (!req.user?.permissions.includes(ADMIN_ROLE.toLocaleUpperCase())) {
+    if (!req.user?.permissions.includes(USER_STAFF.toLocaleUpperCase())) {
         throw new UnauthorizedError("Permission denied")
     }
     if (!userID) { throw new BadRequestError("userID is missing") }
@@ -266,7 +264,7 @@ export const permanentlyDeleteUser = async (req: IRequest, res: Response) => {
 
 export const updateAUser = async (req: IRequest, res: Response) => {
     /*Updates a user of any Schema: Nysc, Staff, Intern, Siwes*/
-    //Accessible to roles: Admin & HR
+    //Accessible to permissions: [USER_STAFF.toLowerCase()] & ["user:write"]
     const { userID } = req.params
     const { userData } = req.body
     var { account, nextOfKin, role: schema } = userData
@@ -276,7 +274,7 @@ export const updateAUser = async (req: IRequest, res: Response) => {
     if (!schema) {
         throw new BadRequestError("schema is missing")
     }
-    if ([ADMIN_ROLE, HR_ROLE, DEPARTMENT_ROLE].includes(schema)) {
+    if ([USER_STAFF, HR_ROLE, DEPARTMENT_ROLE].includes(schema)) {
         schema = "Staff"
     }
 
@@ -292,7 +290,7 @@ export const updateAUser = async (req: IRequest, res: Response) => {
         delete userData[field]
     }
     //Remove admin/HR only updatable fields
-    if (!req.user?.permissions.includes("admin")) {
+    if (!req.user?.permissions.includes(USER_STAFF.toLowerCase())) {
         ADMIN_ONLY_MUTABLE_FIELDS.forEach(field => {
             delete userData[field]
         })

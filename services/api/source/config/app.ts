@@ -39,6 +39,7 @@ app.use(cookieParser(COOKIE_SECRET))
 app.use(morgan("tiny"))
 //Unauthenticated paths
 app.use("/api/auth", authRouter)
+app.use("/", (req, res) => res.json({ message: "Welcome to the API!!" }))
 
 
 

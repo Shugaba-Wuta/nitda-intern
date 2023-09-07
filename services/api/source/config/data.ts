@@ -17,7 +17,6 @@ export const COOKIE_DURATION = "2d"
 export const TOKEN_DURATION = "1d"
 
 export const HR_ROLE = "HR"
-export const ADMIN_ROLE = "Admin"
 export const NYSC_ROLE = "Nysc"
 export const DEPARTMENT_ROLE = "Department"
 export const SIWES_ROLE = "Siwes"
@@ -35,10 +34,9 @@ export const INTERN_SCHEMA = USER_SCHEMA.filter(item => {
 
 
 // export const USER_ROLE_LEVEL3 = ["Associate"]
-export const USER_ROLE_LEVEL3 = [DEPARTMENT_ROLE, ADMIN_ROLE, HR_ROLE, NYSC_ROLE, SIWES_ROLE, INTERN_ROLE]
-export const USER_ROLE_LEVEL2 = [DEPARTMENT_ROLE, ADMIN_ROLE, HR_ROLE]
-export const USER_ROLE_LEVEL1 = [ADMIN_ROLE, HR_ROLE]
-export const USER_ROLE_LEVEL0 = [ADMIN_ROLE]
+export const USER_ROLE_LEVEL3 = [DEPARTMENT_ROLE,  HR_ROLE, NYSC_ROLE, SIWES_ROLE, INTERN_ROLE]
+export const USER_ROLE_LEVEL2 = [DEPARTMENT_ROLE,  HR_ROLE]
+export const USER_ROLE_LEVEL1 = [ HR_ROLE]
 export const ASSOCIATE_SCHEMA = [NYSC_ROLE, SIWES_ROLE, INTERN_ROLE]
 //Permissions
 export const DEFAULT_PERMISSION = ["nysc:read", "siwes:read", "intern:read", "schedule:read"]
