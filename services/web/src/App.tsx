@@ -6,9 +6,6 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { store } from "@src/store";
 import LoginPage from "@pages/login/Login";
 import ErrorDisplay from "@components/AlertDisplay";
-import Sidebar from "@components/Sidebar";
-import Topbar from "@components/Topbar";
-import { ProtectedRoute } from "@components/ProtectedRoute";
 
 
 function App() {
@@ -26,11 +23,12 @@ function App() {
 						<BrowserRouter>
 							<Routes>
 								<Route path="/">
+									{/* Unprotected routes:
+									- Login
+									*/}
 									<Route path="login" element={<LoginPage title="Login" />} />
-									<Route path="dashboard" element={<> <Topbar /> <Sidebar /></>} >
-										<Route path="in" element={
-											<ProtectedRoute children={<div>Nested</div>} />
-										}></Route>
+									<Route path="dashboard" element={<>Hello</>} >
+										<Route path="i" element={<div>IN</div>} />
 									</Route>
 								</Route>
 								<Route path="/admin" element={<div>ADMIN</div>} />
