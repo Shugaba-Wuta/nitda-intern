@@ -135,6 +135,7 @@ export const LoginForm = (props: {
               ),
             }}
             sx={inputFieldStyle}
+            autoComplete="on"
           />
 
           <TextField

@@ -23,17 +23,15 @@ const parseAxiosError = (err: AxiosError<IGenericAPIResponse>) => {
 
 
 const alertHandler = (err: AxiosError | Error | IAlertInput) => {
-
     if (axios.isAxiosError(err)) {
         const message = parseAxiosError(err as AxiosError<IGenericAPIResponse>)
-        store.dispatch(addNewAlert(message, "Request Failed: ", "error"))
+        store.dispatch(addNewAlert(message, "error"))
     }
     else if (err instanceof Error) {
-        store.dispatch(addNewAlert(err.message, "Request Failed: ", "error"))
+        store.dispatch(addNewAlert(err.message, "error"))
     }
     else {
-        err.message && store.dispatch(addNewAlert(err.message, err.title || "Request Failed: ", err.type || "info"))
+        err.message && store.dispatch(addNewAlert(err.message, err.type || "info", err.title))
     }
-
 }
 export default alertHandler

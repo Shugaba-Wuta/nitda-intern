@@ -9,6 +9,7 @@ import { removeAlert } from '@store/alertsSlice';
 
 
 const MAX_ALERT_TIME_MILLISECONDS = 50_000
+const ALERT_DURATION = 10_000
 const MAX_ALERTS = 10
 const ErrorDisplay = () => {
     const dispatch = useAppDispatch()
@@ -60,6 +61,7 @@ const ErrorDisplay = () => {
                             .slice(0, MAX_ALERTS)
                             .reverse()
                             .map((alert) => {
+                                setTimeout(() => dispatch(removeAlert({ id: alert.id })), ALERT_DURATION)
                                 return (
                                     <Alert variant='standard' severity={alert.type}
                                         onClose={() => dispatch(removeAlert({ id: alert.id }))} key={alert.id}

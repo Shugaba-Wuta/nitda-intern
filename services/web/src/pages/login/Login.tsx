@@ -15,6 +15,9 @@ import { ILoginPayload, IResetPasswordPayload } from "@src/types/auth";
 import { loginThunk } from "@src/store/authSlice";
 import { useAppDispatch } from "@src/store";
 import { passwordRequestOTPByEmail, resetPasswordByOTP } from "@utils/services";
+import { useLocation } from "react-router-dom";
+import { addNewAlert } from "@src/store/alertsSlice";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = ({ title }: { title: string }) => {
@@ -22,6 +25,8 @@ const Login = ({ title }: { title: string }) => {
   const colors = tokens(theme.palette.mode);
   const [currentFormType, setCurrentFormType] = useState(title);
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const FORM_TYPE = {
     RESET_PASSWORD: "Reset Password",
@@ -31,8 +36,19 @@ const Login = ({ title }: { title: string }) => {
 
   useTitleChange(title);
 
+  const _continue = new URLSearchParams(location.search).get("_continue");
+
   const handleLoginFormSubmit = async (values: ILoginPayload) => {
-    dispatch(loginThunk(values));
+    dispatch(loginThunk(values))
+      .unwrap()
+      .then((_val) => { //eslint-disable-line @typescript-eslint/no-unused-vars
+        dispatch(addNewAlert("Login Successful", "success"))
+        navigate(_continue || "/")
+
+      }).catch((_err) => { //eslint-disable-line @typescript-eslint/no-unused-vars
+        dispatch(addNewAlert("Login was Unsuccessful", "error"))
+      })
+
   };
 
   const handleForgotPasswordFormSubmit = async (values: { email: string }) => {

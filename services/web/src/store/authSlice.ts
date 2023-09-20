@@ -3,9 +3,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IDecodedUserInfo } from "@src/types/auth";
 import axios from "@utils/axiosConfig"
 import jwtDecode from "jwt-decode";
-import { AxiosError } from "axios";
-import alertHandler from "@utils/alertHandler";
-import { IGenericAPIResponse } from "@src/types";
 
 //Types and interfaces
 
@@ -34,26 +31,16 @@ const initialState: IInitialState = {
 
 
 export const loginThunk = createAsyncThunk("/auth/login", async ({ password, email }: ILoginCredentials) => {
-    try {
 
-        const response = await axios.post("/auth/login", { password, email })
-        const decodedToken: IDecodedUserInfo = jwtDecode(response.data.result.accessToken)
-        alertHandler({ message: "Login Successful", title: " ", type: "success" })
-        return { accessToken: response.data.result.accessToken, decodedToken }
-    } catch (error) {
-        alertHandler(error as AxiosError)
-    }
+    const response = await axios.post("/auth/login", { password, email })
+    const decodedToken: IDecodedUserInfo = jwtDecode(response.data.result.accessToken)
+    return { accessToken: response.data.result.accessToken, decodedToken }
 })
 
-export const refreshThunk = createAsyncThunk("/auth/refresh", async (_, { rejectWithValue }) => {
-    try {
-        const response = await axios.post("/auth/refresh")
-        const decodedToken: IDecodedUserInfo = jwtDecode(response.data.result.refreshToken)
-        return { accessToken: response.data.result.accessToken, decodedToken }
-    } catch (err) {
-        const error = err as AxiosError<IGenericAPIResponse>
-        return rejectWithValue(error.response?.data.message || error.message)
-    }
+export const refreshThunk = createAsyncThunk("/auth/refresh", async () => {
+    const response = await axios.post("/auth/refresh")
+    const decodedToken: IDecodedUserInfo = jwtDecode(response.data.result.refreshToken)
+    return { accessToken: response.data.result.accessToken, decodedToken }
 })
 
 

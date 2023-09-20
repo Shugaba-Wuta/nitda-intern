@@ -6,6 +6,9 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { store } from "@src/store";
 import LoginPage from "@pages/login/Login";
 import ErrorDisplay from "@components/AlertDisplay";
+import Layout from "@components/page-layout/Layout";
+import { ProtectedRoute } from "@components/ProtectedRoute";
+import Error404 from "./pages/404";
 
 
 function App() {
@@ -22,16 +25,19 @@ function App() {
 						<ErrorDisplay />
 						<BrowserRouter>
 							<Routes>
-								<Route path="/">
-									{/* Unprotected routes:
-									- Login
-									*/}
-									<Route path="login" element={<LoginPage title="Login" />} />
-									<Route path="dashboard" element={<>Hello</>} >
-										<Route path="i" element={<div>IN</div>} />
-									</Route>
+								<Route path="/login" element={<LoginPage title="Login" />} />
+								<Route path="/"
+									element={<ProtectedRoute children={
+										<Layout />
+									} />}
+								>
 								</Route>
 								<Route path="/admin" element={<div>ADMIN</div>} />
+								<Route path="/error" element={<Error404 />} >
+									<Route path="404" element={<Error404 />} />
+								</Route>
+								<Route path="/*" element={<Error404 />} />
+
 							</Routes>
 						</BrowserRouter>
 
