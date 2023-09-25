@@ -1,14 +1,37 @@
+import Box from "@mui/material/Box";
+import { IDecodedUserInfo } from "@src/types/auth";
 import SideNavigation from "./Sidebar";
 import Topbar from "./Topbar";
+import { useAppSelector } from "@src/store";
+import { ProtectedRoute } from "@components/ProtectedRoute";
 
-import React from 'react'
 
-function Layout() {
+function Layout({ children }: { children: React.ReactNode }) {
+    const decodedToken = useAppSelector(state => state.auth.userInfo) || {} as IDecodedUserInfo
+    const { role: userRole } = decodedToken
+
     return (
-        <>
-            <Topbar />
-            <SideNavigation />
-        </>
+        <ProtectedRoute>
+            <Box display="flex"
+
+            >
+                <SideNavigation {...{ userRole, activeNav: "Home" }} />
+                <Box sx={{
+                    flexGrow: 1,
+                }}>
+                    <Topbar />
+                    <Box component="section"
+                        sx={{
+                            margin: "auto",
+                            padding: "1rem",
+                        }}
+                    >
+                        {children}
+                    </Box>
+
+                </Box>
+            </Box>
+        </ProtectedRoute>
     )
 }
 

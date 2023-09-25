@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
 import WestIcon from '@mui/icons-material/West';
 import EastIcon from '@mui/icons-material/East';
+import { useEffect } from "react";
 import { useTitleChange } from "@hooks/useTitleChange";
 import nitdaHQ from "@static/nitda-hq.jpg";
 import nitdaTextLogo from "@static/nitda-cropped-logo.png";
@@ -12,12 +13,11 @@ import {
   RequestChangePassword,
 } from "@components/login-form/Login";
 import { ILoginPayload, IResetPasswordPayload } from "@src/types/auth";
-import { loginThunk } from "@src/store/authSlice";
-import { useAppDispatch } from "@src/store";
+import { loginThunk, refreshThunk } from "@src/store/authSlice";
+import { useAppDispatch, useAppSelector } from "@src/store";
 import { passwordRequestOTPByEmail, resetPasswordByOTP } from "@utils/services";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { addNewAlert } from "@src/store/alertsSlice";
-import { useNavigate } from "react-router-dom";
 
 
 const Login = ({ title }: { title: string }) => {
@@ -27,6 +27,7 @@ const Login = ({ title }: { title: string }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  const auth = useAppSelector((state) => state.auth);
 
   const FORM_TYPE = {
     RESET_PASSWORD: "Reset Password",
@@ -37,15 +38,14 @@ const Login = ({ title }: { title: string }) => {
   useTitleChange(title);
 
   const _continue = new URLSearchParams(location.search).get("_continue");
-
   const handleLoginFormSubmit = async (values: ILoginPayload) => {
     dispatch(loginThunk(values))
       .unwrap()
-      .then((_val) => { //eslint-disable-line @typescript-eslint/no-unused-vars
+      .then(() => { //eslint-disable-line @typescript-eslint/no-unused-vars
         dispatch(addNewAlert("Login Successful", "success"))
         navigate(_continue || "/")
 
-      }).catch((_err) => { //eslint-disable-line @typescript-eslint/no-unused-vars
+      }).catch(() => { //eslint-disable-line @typescript-eslint/no-unused-vars
         dispatch(addNewAlert("Login was Unsuccessful", "error"))
       })
 
@@ -56,10 +56,27 @@ const Login = ({ title }: { title: string }) => {
     passwordRequestOTPByEmail(email);
   };
   const handleResetPasswordFormSubmit = async (values: Omit<IResetPasswordPayload, "tokenPurpose">) => {
-
     await resetPasswordByOTP({ ...values, tokenPurpose: "PASSWORD-CHANGE" })
-
+    navigate("/login")
   }
+
+  useEffect(() => {
+    dispatch(refreshThunk()).unwrap().then(() => {
+      navigate(_continue || "/")
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    }).catch(_e => {
+      dispatch(addNewAlert("You have been logged out", "error"))
+    })
+
+    if (_continue?.length && auth.success)
+      navigate(_continue)
+    else if (auth.success) {
+      navigate("/")
+    }
+
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     // Background setup
     <Box
@@ -79,8 +96,7 @@ const Login = ({ title }: { title: string }) => {
       {/* Glassmorphism container  */}
       <Box
         sx={{
-          // height: "60%",
-          maxWidth: "1600px",
+          maxWidth: "1920px",
           minHeight: "fit-content",
           background: "rgba(255, 255, 255, 0.5)",
           boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",

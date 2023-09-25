@@ -47,14 +47,12 @@ const Error404 = () => {
                 <Box component="h2" style={{
                     wordSpacing: "0.3rem",
                     letterSpacing: "0.2rem",
-                    color: colors.gray[900],
                 }} > 404-Page not Found </Box>
                 <Box component="p"
                     style={{
                         width: "35%",
                         textAlign: "center",
                         fontWeight: "500",
-                        color: colors.gray[900],
                     }}>
                     The page you are looking for might have been removed, had its name changed or is temporarily unavailable.
 
@@ -66,11 +64,10 @@ const Error404 = () => {
                         fontWeight: "bold",
                         fontSize: "1rem",
                         backgroundColor: "transparent",
-                        color: colors.gray[900],
                         outline: "2px solid",
                         "&:hover": {
                             backgroundColor: colors.gray[100],
-                            color: colors.gray[100],
+                            color: colors.gray[900],
                         }
 
                     }}

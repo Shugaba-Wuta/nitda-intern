@@ -6,9 +6,8 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { store } from "@src/store";
 import LoginPage from "@pages/login/Login";
 import ErrorDisplay from "@components/AlertDisplay";
-import Layout from "@components/page-layout/Layout";
-import { ProtectedRoute } from "@components/ProtectedRoute";
 import Error404 from "./pages/404";
+import Layout from "@components/page-layout/Layout";
 
 
 function App() {
@@ -26,15 +25,15 @@ function App() {
 						<BrowserRouter>
 							<Routes>
 								<Route path="/login" element={<LoginPage title="Login" />} />
-								<Route path="/"
-									element={<ProtectedRoute children={
-										<Layout />
-									} />}
-								>
-								</Route>
 								<Route path="/admin" element={<div>ADMIN</div>} />
-								<Route path="/error" element={<Error404 />} >
-									<Route path="404" element={<Error404 />} />
+								<Route path="/error" element={<Error404 />} />
+								<Route path="/"
+									element={
+										<Layout >
+											<div>Hello World</div>
+										</Layout>
+									}>
+									<Route  />
 								</Route>
 								<Route path="/*" element={<Error404 />} />
 

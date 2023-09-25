@@ -33,8 +33,8 @@ if (!TEST_ENV) {
 }
 
 export const createAdminAcct = async (adminInfo: CreateAdmin = admin) => {
-    const existingAdmin = await Staff.findOne({ $or: [{ email: adminInfo.email, deleted: false, active: true }, { active: true, deleted: false }, { permissions: { $elemMatch: "admin" }, active: true, deleted: false }] })
-    if (existingAdmin) {
+    const existingAdmin = await Staff.find({ $or: [{ email: adminInfo.email, deleted: false, active: true }, { permissions: "admin", active: true, deleted: false }] })
+    if (existingAdmin.length > 0) {
         return "Admin already exists"
     }
 

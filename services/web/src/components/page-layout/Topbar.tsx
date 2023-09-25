@@ -5,15 +5,27 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
 function Topbar() {
   const theme = useTheme();
-  //   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
   return (
-    <Box display={"flex"} flexDirection={"column"}>
+    <Box
+      sx={{
+        position: "sticky",
+        top: 0,
+        zIndex: 20,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        margin: "0 0 0 auto",
+        backgroundColor: "rgba(255, 255, 255, 0)",
+        boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        backdropFilter: "blur(4.1px)",
+
+      }}
+    >
       <Box display="flex" justifyContent="flex-end" p={2}>
         {/* Other icons */}
         <Box display="flex">
@@ -26,12 +38,6 @@ function Topbar() {
           <Tooltip title="Settings">
             <IconButton>
               <SettingsOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="Logout">
-            <IconButton>
-              <LogoutOutlinedIcon />
             </IconButton>
           </Tooltip>
 

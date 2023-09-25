@@ -17,7 +17,10 @@ export const ProtectedRoute = ({ children }: IChildren) => {
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(search);
-		queryParams.append("_continue", pathname.length > 1 ? pathname : "");
+		if (pathname.length > 1) {
+
+			queryParams.append("_continue", pathname);
+		}
 		const queryParamsWithRedirect = queryParams.toString();
 		const tokenExp = auth.userInfo?.exp || 0;
 		if (tokenExp * 1000 < (Date.now() - REQUEST_TIME_BUFFER)) {
@@ -26,16 +29,13 @@ export const ProtectedRoute = ({ children }: IChildren) => {
 				.unwrap()
 				.then(() => {
 				})
-				.catch(() => {
+				.catch((err) => {
+					err
 					navigate(`/login?${queryParamsWithRedirect}`)
 				})
 		}
-		if (!auth.success) {
-			navigate(`/login?${queryParamsWithRedirect}`)
-		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [auth.success, auth.userInfo?.exp])
+	}, [])
 
 
 	return children

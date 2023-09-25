@@ -46,10 +46,10 @@ const ErrorDisplay = () => {
             position: "relative",
             maxWidth: "50%",
             maxHeight: "99vh",
-            zIndex: 100,
+            zIndex: 10,
             marginLeft: "auto",
         }} component={"section"} aria-label='Alerts'>
-            <Stack spacing={0.25} sx={{ position: "absolute", right: 5, top: 5 }}>
+            <Stack spacing={0.25} sx={{ position: "absolute", right: 5, top: "3.5rem" }}>
                 <ThemeProvider theme={AlertTheme}>
                     {
                         alerts

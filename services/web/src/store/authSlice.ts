@@ -38,9 +38,14 @@ export const loginThunk = createAsyncThunk("/auth/login", async ({ password, ema
 })
 
 export const refreshThunk = createAsyncThunk("/auth/refresh", async () => {
-    const response = await axios.post("/auth/refresh")
+    const response = await axios.get("/auth/refresh")
     const decodedToken: IDecodedUserInfo = jwtDecode(response.data.result.refreshToken)
     return { accessToken: response.data.result.accessToken, decodedToken }
+})
+
+export const logoutThunk = createAsyncThunk("/auth/logout", async () => {
+    const response = await axios.get("/auth/logout")
+    return response.data
 })
 
 
@@ -72,6 +77,23 @@ const { reducer, } = createSlice({
                 state.userToken = ""
                 state.userInfo = initialState.userInfo
             })
+            //logoutThunk cases
+            .addCase(logoutThunk.fulfilled, (state) => {
+                state.status = "idle"
+                state.success = false
+                state.userToken = ""
+                state.userInfo = initialState.userInfo
+            })
+            .addCase(logoutThunk.pending, (state) => {
+                state.status = "loading"
+                state.success = false
+            })
+            .addCase(logoutThunk.rejected, (state) => {
+                state.status = "loggedInFailed"
+                state.success = false
+                state.userToken = ""
+                state.userInfo = initialState.userInfo
+            })
             //refreshThunk cases
             .addCase(refreshThunk.fulfilled, (state, action) => {
                 state.status = "loggedInSuccessful"
@@ -82,7 +104,6 @@ const { reducer, } = createSlice({
             .addCase(refreshThunk.pending, (state,) => {
                 state.status = "loading"
                 state.success = false
-                console.log("refreshing token")
             })
 
             .addCase(refreshThunk.rejected, (state) => {
