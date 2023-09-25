@@ -4,7 +4,7 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { ColorModeContext, useMode } from "@src/theme";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { store } from "@src/store";
-import LoginPage from "@pages/login/Login";
+import LoginPage from "@src/pages/login";
 import ErrorDisplay from "@components/AlertDisplay";
 import Error404 from "./pages/404";
 import Layout from "@components/page-layout/Layout";

@@ -1,249 +1,463 @@
 import { useState } from "react";
-import { Box, Typography, useTheme } from "@mui/material";
-import WestIcon from '@mui/icons-material/West';
-import EastIcon from '@mui/icons-material/East';
-import { useEffect } from "react";
-import { useTitleChange } from "@hooks/useTitleChange";
-import nitdaHQ from "@static/nitda-hq.jpg";
-import nitdaTextLogo from "@static/nitda-cropped-logo.png";
-import { tokens } from "@src/theme";
 import {
-  ConfirmPasswordChangeForm,
-  LoginForm,
-  RequestChangePassword,
-} from "@components/login-form/Login";
-import { ILoginPayload, IResetPasswordPayload } from "@src/types/auth";
-import { loginThunk, refreshThunk } from "@src/store/authSlice";
-import { useAppDispatch, useAppSelector } from "@src/store";
-import { passwordRequestOTPByEmail, resetPasswordByOTP } from "@utils/services";
-import { useLocation, useNavigate } from "react-router-dom";
-import { addNewAlert } from "@src/store/alertsSlice";
+  TextField,
+  InputAdornment,
+  IconButton,
+  Tooltip,
+  Box,
+} from "@mui/material";
+import KeyOutlined from "@mui/icons-material/KeyOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import EmailOutlined from "@mui/icons-material/EmailOutlined";
+import * as yup from "yup";
+import { Formik } from "formik";
+import useLocalStorage from "@hooks/useLocalStorage";
 
+import { inputFieldStyle as sx, primarySubmitBtnStyle } from "./FieldStyles";
 
-const Login = ({ title }: { title: string }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  const [currentFormType, setCurrentFormType] = useState(title);
-  const dispatch = useAppDispatch();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const auth = useAppSelector((state) => state.auth);
+// Login Form with validation
+export const LoginForm = (props: {
+  iconColor: string;
+  textColor: string;
+  bgColor: string;
+  handleLoginFormSubmit(values: object): void;
+}) => {
+  const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
+  const inputFieldStyle = sx(iconColor || textColor);
 
-  const FORM_TYPE = {
-    RESET_PASSWORD: "Reset Password",
-    LOGIN: "Login",
-    CHANGE_PASSWORD: "Change Password",
+  const loginSchema = yup.object().shape({
+    email: yup.string().email("Invalid email").required("Email is required"),
+    password: yup
+      .string()
+      .min(6, "Password must be between 6 and 24 characters")
+      .max(24, "Password must be between 6 and 24 characters")
+      .required("Password is required"),
+  });
+  const [defaultEmail, setDefaultEmail] = useLocalStorage("defaultEmail", "");
+  const [passwordHidden, setPasswordHidden] = useState(true);
+  const initialValues = {
+    password: "",
+    email: defaultEmail,
   };
-
-  useTitleChange(title);
-
-  const _continue = new URLSearchParams(location.search).get("_continue");
-  const handleLoginFormSubmit = async (values: ILoginPayload) => {
-    dispatch(loginThunk(values))
-      .unwrap()
-      .then(() => { //eslint-disable-line @typescript-eslint/no-unused-vars
-        dispatch(addNewAlert("Login Successful", "success"))
-        navigate(_continue || "/")
-
-      }).catch(() => { //eslint-disable-line @typescript-eslint/no-unused-vars
-        dispatch(addNewAlert("Login was Unsuccessful", "error"))
-      })
-
-  };
-
-  const handleForgotPasswordFormSubmit = async (values: { email: string }) => {
-    const { email } = values;
-    passwordRequestOTPByEmail(email);
-  };
-  const handleResetPasswordFormSubmit = async (values: Omit<IResetPasswordPayload, "tokenPurpose">) => {
-    await resetPasswordByOTP({ ...values, tokenPurpose: "PASSWORD-CHANGE" })
-    navigate("/login")
-  }
-
-  useEffect(() => {
-    dispatch(refreshThunk()).unwrap().then(() => {
-      navigate(_continue || "/")
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    }).catch(_e => {
-      dispatch(addNewAlert("You have been logged out", "error"))
-    })
-
-    if (_continue?.length && auth.success)
-      navigate(_continue)
-    else if (auth.success) {
-      navigate("/")
-    }
-
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
-    // Background setup
-    <Box
-      height={"100vh"}
-      width={"100vw"}
-      position={"relative"}
-      padding={"0 min(20px, 4rem, 5%)"}
-      sx={{
-        backgroundImage: `url(${nitdaHQ})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <Formik
+      onSubmit={handleLoginFormSubmit}
+      validationSchema={loginSchema}
+      initialValues={initialValues}
     >
-      {/* Glassmorphism container  */}
-      <Box
-        sx={{
-          maxWidth: "1920px",
-          minHeight: "fit-content",
-          background: "rgba(255, 255, 255, 0.5)",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(4.1px)",
-          borderRadius: "5px",
-          padding: "30px",
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        {/* Title section  */}
+      {({
+        values,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting
+      }) => (
         <Box
+          component={"form"}
           display={"flex"}
-          sx={{
-            flexDirection: "column",
-            alignItems: "center",
-          }}
+          flexDirection={"column"}
+          justifyContent={"space-evenly"}
+          onSubmit={handleSubmit}
         >
-          <img
-            src={`${nitdaTextLogo}`}
-            alt="NITDA text logo"
-            height={"60rem"}
-          />
-          <Typography
-            sx={{
-              fontSize: "1.75rem",
-              color: "#004E2B",
-              fontWeight: "500",
-              mt: "min(5px, 1rem)",
+          <TextField
+            fullWidth
+            size="small"
+            id="email"
+            name="email"
+            label="Email"
+            type="email"
+            value={values.email}
+            onBlur={(e) => {
+              handleBlur(e);
+              setDefaultEmail(values.email);
             }}
-          >
-            Intern Portal
-          </Typography>
-        </Box>
-        <Box mt={"2rem"}>
-          {/* Form Input and Button */}
-          {currentFormType === FORM_TYPE.LOGIN && (
-            <LoginForm
-              iconColor={colors.gray[100]}
-              textColor={colors.gray[900]}
-              bgColor={colors.green[100]}
-              handleLoginFormSubmit={handleLoginFormSubmit}
-            />
-          )}
-          {currentFormType === FORM_TYPE.CHANGE_PASSWORD && (
-            <ConfirmPasswordChangeForm
-              iconColor={colors.gray[100]}
-              textColor={colors.gray[900]}
-              bgColor={colors.green[100]}
-              handleLoginFormSubmit={handleResetPasswordFormSubmit}
-            />
-          )}
-
-          {currentFormType === FORM_TYPE.RESET_PASSWORD && (
-            <RequestChangePassword
-              iconColor={colors.gray[100]}
-              textColor={colors.gray[900]}
-              bgColor={colors.green[100]}
-              handleLoginFormSubmit={handleForgotPasswordFormSubmit}
-            />
-          )}
-        </Box>
-        <Box mt={"4rem"}>
-          {/*  Glassmorphism footer navigation */}
-          {currentFormType === FORM_TYPE.LOGIN && (
-            <Typography sx={{
-              display: "flex",
-            }}>
-              Forgot password?{""}
-              <Box
-                component={"a"}
-                sx={{
-                  ml: "5px",
-                  cursor: "pointer",
-                  ":hover": {
-                    color: colors.green[300],
-                  },
-                  fontWeight: 700,
-                  textDecoration: "underline",
-                }}
-                onClick={() => {
-                  setCurrentFormType(FORM_TYPE.RESET_PASSWORD);
-                }}
-              >
-                Click here
-              </Box>
-              <EastIcon sx={{ marginLeft: "3px" }} />
-            </Typography>
-          )}
-
-          {currentFormType !== FORM_TYPE.LOGIN && (
-            <>
-              <Typography>
-                <Box
-                  component={"a"}
-                  sx={{
-                    display: "flex",
-                    cursor: "pointer",
-                    p: "0.25rem",
-                    ":hover": {
-                      color: colors.green[300],
-                      textDecoration: "underline",
-                    },
-                    fontWeight: 500,
-                  }}
-                  onClick={() => {
-                    setCurrentFormType(FORM_TYPE.LOGIN);
-                  }}
-                >
-                  <WestIcon sx={{ align: "center", justifyItems: "center", marginRight: "5px" }} />Back to login
-                </Box>
-              </Typography>
-              {/* // Hides "Have OTP Code" on the Reset form screen */}
-              {(currentFormType !== FORM_TYPE.CHANGE_PASSWORD) &&
-
-                <Typography
-                  sx={{
-                    fontSize: "0.8rem",
-                    p: "0.25rem",
-                    opacity: 0.75,
-                    fontStyle: "italic",
-                  }}
-                >
-                  <Box
-                    component={"a"}
-                    sx={{
-                      display: "flex",
-                      cursor: "pointer",
-                      ":hover": {
-                        color: colors.green[300],
-                        textDecoration: "underline",
-                      },
-                    }}
+            onChange={handleChange}
+            error={!!touched.email && !!errors.email}
+            helperText={
+              touched.email &&
+              errors.email &&
+              typeof errors.email === "string" &&
+              errors.email
+            }
+            variant="standard"
+            placeholder="example@example.com"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailOutlined sx={{ color: iconColor }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={inputFieldStyle}
+          />
+          <TextField
+            fullWidth
+            size="small"
+            id="password"
+            name="password"
+            label="Password"
+            type={passwordHidden ? "password" : "text"}
+            value={values.password}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            error={!!touched.password && !!errors.password}
+            helperText={
+              touched.password &&
+              errors.password &&
+              typeof errors.password === "string" &&
+              errors.password
+            }
+            variant="standard"
+            placeholder="secret"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <KeyOutlined sx={{ color: iconColor }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <Tooltip title={passwordHidden ? "Show" : "Hide"}>
+                  <IconButton
                     onClick={() => {
-                      setCurrentFormType(FORM_TYPE.CHANGE_PASSWORD);
+                      setPasswordHidden(!passwordHidden);
                     }}
                   >
-                    Have OTP Code? <EastIcon fontSize="small" sx={{ ml: "5px" }} />
-                  </Box>
-                </Typography>}
-            </>
-          )}
+                    {passwordHidden ? (
+                      <VisibilityOutlinedIcon />
+                    ) : (
+                      <VisibilityOffOutlinedIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              ),
+            }}
+            sx={inputFieldStyle}
+            autoComplete="on"
+          />
+
+          <TextField
+            type="submit"
+            size="small"
+            role="button"
+            value="Login"
+            id="submit"
+            disabled={isSubmitting}
+            sx={{
+              ...primarySubmitBtnStyle(bgColor, textColor),
+              mt: "2rem",
+            }}
+          />
         </Box>
-      </Box>
-    </Box>
+      )}
+    </Formik>
   );
 };
-export default Login;
+
+// Confirm Change Password Form with validation
+export const ConfirmPasswordChangeForm = (props: {
+  iconColor: string;
+  textColor: string;
+  bgColor: string;
+  handleLoginFormSubmit(values: object): void;
+}) => {
+  const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
+  const inputFieldStyle = sx(iconColor || textColor);
+
+  const confirmPasswordSchema = yup.object().shape({
+    email: yup.string().email("Invalid email").required("Email is required"),
+    otpCode: yup
+      .string()
+      .min(4, "OTP Code must be between 4 and 6 characters")
+      .max(6, "Password must be between 4 and 6 characters")
+      .required("OTP Code is required"),
+    newPassword: yup
+      .string()
+      .min(6, "New Password must be between 6 and 24 characters")
+      .max(24, "New Password must be between 6 and 24 characters")
+      .required("New Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("newPassword")], "Passwords must match"),
+  });
+  const [defaultEmail, setDefaultEmail] = useLocalStorage("defaultEmail", "");
+  const [passwordHidden, setPasswordHidden] = useState(true);
+  const [confirmPasswordHidden, setConfirmPasswordHidden] = useState(true);
+  const initialValues = {
+    newPassword: "",
+    email: defaultEmail,
+    confirmPassword: "",
+    otpCode: "",
+  };
+  return (
+    <Formik
+      onSubmit={handleLoginFormSubmit}
+      validationSchema={confirmPasswordSchema}
+      initialValues={initialValues}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+      }) => (
+        <Box
+          component={"form"}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"space-evenly"}
+          onSubmit={handleSubmit}
+        >
+          <TextField
+            fullWidth
+            size="small"
+            id="email"
+            name="email"
+            label="Email"
+            type="email"
+            disabled
+            value={values.email}
+            onBlur={(e) => {
+              handleBlur(e);
+              setDefaultEmail(values.email);
+            }}
+            onChange={handleChange}
+            error={!!touched.email && !!errors.email}
+            helperText={
+              touched.email &&
+              errors.email &&
+              typeof errors.email === "string" &&
+              errors.email
+            }
+            variant="standard"
+            placeholder="example@example.com"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailOutlined sx={{ color: iconColor }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={inputFieldStyle}
+          />
+          <TextField
+            fullWidth
+            size="small"
+            id="otpCode"
+            name="otpCode"
+            label="OTP Code"
+            type="text"
+            value={values.otpCode}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            error={!!touched.otpCode && !!errors.otpCode}
+            helperText={
+              touched.otpCode &&
+              errors.otpCode &&
+              typeof errors.otpCode === "string" &&
+              errors.otpCode
+            }
+            variant="standard"
+            placeholder="OTP Code"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <KeyOutlined sx={{ color: iconColor }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ ...inputFieldStyle }}
+          />
+
+          <TextField
+            fullWidth
+            size="small"
+            id="newPassword"
+            name="newPassword"
+            label="New Password"
+            type={passwordHidden ? "password" : "text"}
+            value={values.newPassword}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            error={!!touched.newPassword && !!errors.newPassword}
+            helperText={
+              touched.newPassword &&
+              errors.newPassword &&
+              typeof errors.newPassword === "string" &&
+              errors.newPassword
+            }
+            variant="standard"
+            placeholder="secret"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <KeyOutlined sx={{ color: iconColor }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <Tooltip title={passwordHidden ? "Show" : "Hide"}>
+                  <IconButton
+                    onClick={() => {
+                      setPasswordHidden(!passwordHidden);
+                    }}
+                  >
+                    {passwordHidden ? (
+                      <VisibilityOutlinedIcon />
+                    ) : (
+                      <VisibilityOffOutlinedIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              ),
+            }}
+            sx={inputFieldStyle}
+          />
+          <TextField
+            fullWidth
+            size="small"
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Confirm Password"
+            type={confirmPasswordHidden ? "password" : "text"}
+            value={values.confirmPassword}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            error={!!touched.confirmPassword && !!errors.confirmPassword}
+            helperText={
+              touched.confirmPassword &&
+              errors.confirmPassword &&
+              typeof errors.confirmPassword === "string" &&
+              errors.confirmPassword
+            }
+            variant="standard"
+            placeholder="secret"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <KeyOutlined sx={{ color: iconColor }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <Tooltip title={confirmPasswordHidden ? "Show" : "Hide"}>
+                  <IconButton
+                    onClick={() => {
+                      setConfirmPasswordHidden(!confirmPasswordHidden);
+                    }}
+                  >
+                    {confirmPasswordHidden ? (
+                      <VisibilityOutlinedIcon />
+                    ) : (
+                      <VisibilityOffOutlinedIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              ),
+            }}
+            sx={inputFieldStyle}
+          />
+          <TextField
+            type="submit"
+            size="small"
+            value="Change Password"
+            id="submit"
+            sx={{ ...primarySubmitBtnStyle(bgColor, textColor), mt: "2rem" }}
+          />
+        </Box>
+      )}
+    </Formik>
+  );
+};
+
+// Request Change Password Form with validation
+export const RequestChangePassword = (props: {
+  iconColor: string;
+  textColor: string;
+  bgColor: string;
+  handleLoginFormSubmit(values: object): void;
+}) => {
+  const { iconColor, textColor, bgColor, handleLoginFormSubmit } = props;
+  const inputFieldStyle = sx(iconColor || textColor);
+
+  const loginSchema = yup.object().shape({
+    email: yup
+      .string()
+
+      .email("Invalid email")
+      .required("Email is required"),
+  });
+  const [defaultEmail, setDefaultEmail] = useLocalStorage("defaultEmail", "");
+  const initialValues = {
+    email: defaultEmail,
+  };
+  return (
+    <Formik
+      onSubmit={handleLoginFormSubmit}
+      validationSchema={loginSchema}
+      initialValues={initialValues}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+      }) => (
+        <Box
+          component={"form"}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"space-evenly"}
+          onSubmit={handleSubmit}
+        >
+          <TextField
+            fullWidth
+            size="small"
+            id="email"
+            name="email"
+            label="Email"
+            type="email"
+            value={values.email}
+            onBlur={(e) => {
+              handleBlur(e);
+              setDefaultEmail(values.email);
+            }}
+            onChange={handleChange}
+            error={!!touched.email && !!errors.email}
+            helperText={
+              touched.email &&
+              errors.email &&
+              typeof errors.email === "string" &&
+              errors.email
+            }
+            variant="standard"
+            placeholder="example@example.com"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailOutlined sx={{ color: iconColor }} />
+                </InputAdornment>
+              ),
+            }}
+            sx={inputFieldStyle}
+          />
+
+          <TextField
+            type="submit"
+            size="small"
+            value="Reset Password"
+            id="submit"
+            sx={{
+              ...primarySubmitBtnStyle(bgColor, textColor),
+              mt: "2rem",
+            }}
+          />
+        </Box>
+      )}
+    </Formik>
+  );
+};

@@ -12,9 +12,9 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EmailOutlined from "@mui/icons-material/EmailOutlined";
 import * as yup from "yup";
 import { Formik } from "formik";
-import useLocalStorage from "@hooks/useLocalStorage";
+import { useLocalStorage } from "@hooks/useLocalStorage";
 
-import { inputFieldStyle as sx, primarySubmitBtnStyle } from "./FieldStyles";
+import { inputFieldStyle as sx, primarySubmitBtnStyle } from "../FieldStyles";
 
 // Login Form with validation
 export const LoginForm = (props: {

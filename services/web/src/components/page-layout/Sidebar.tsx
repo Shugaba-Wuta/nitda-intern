@@ -24,7 +24,6 @@ import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
 import { useAppSelector, useAppDispatch } from "@src/store";
 import { hexToRgba, toTitleCase } from "@src/utils/generic-utils";
 import { logoutThunk } from "@src/store/authSlice";
-import { addNewAlert } from "@src/store/alertsSlice";
 
 
 type ActiveNavItem = "Home" | "Users" | "Add User" | "Payroll" | "Department" | "Departments" | "Documents" | "Calendar" | "Logout";
@@ -109,10 +108,6 @@ const SideNavigation = (props: ISidebarProps) => {
 			.then(() => {
 				navigate("/login")
 			}).catch(() => {
-				dispatch(addNewAlert(
-					"An error occurred while logging out",
-					"error",
-				))
 				navigate("/login")
 			})
 
