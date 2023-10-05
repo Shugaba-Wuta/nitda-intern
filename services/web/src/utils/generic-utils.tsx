@@ -16,3 +16,10 @@ export const hexToRgba = (hex: string, alpha: number) => {
 
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
+
+export function isPermitted(userPermissions: string[], requiredPermissions: string[]) {
+  /*
+  * Check if user has any of the required permissions otherwise returns false
+  */
+  return requiredPermissions.some((permission) => userPermissions.includes(permission));
+}

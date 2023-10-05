@@ -20,6 +20,7 @@ import { attachUserToRequest } from '../middleware/auth'
 import authRouter from "../routers/auth-route"
 import userRouter from "../routers/user-route"
 import payrollRouter from "../routers/payroll-route"
+import miscRouter from "../routers/misc-route"
 import { ALLOWED_ORIGINS, MAX_FILE_UPLOAD_IN_MB } from "./data"
 import { APP_PORT, COOKIE_SECRET, MONGO_DB_URL, TEST_ENV } from '.'
 import { createAdminAcct } from "../db/create-admin"
@@ -63,6 +64,7 @@ app.use(fileUpload({
 //Authenticated paths
 app.use("/api/users", userRouter)
 app.use("/api/payroll", payrollRouter)
+app.use("/api/misc", miscRouter)
 app.use(notFoundMiddleware)
 
 

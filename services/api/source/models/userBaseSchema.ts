@@ -2,7 +2,7 @@ import mongoose, { Model } from "mongoose"
 import bcrypt from "bcryptjs"
 import { IUserBase, startPassResetFlowOptions } from "models"
 import { IIntern, INysc, IStaff, ISiwes } from "models"
-import {  UserTypes } from "../config/data"
+import { ALL_DEPT, UserTypes } from "../config/data"
 import { OTP } from "../models"
 import Mailer from "../mailing/mailer"
 import { TEST_ENV } from "../config"
@@ -22,7 +22,7 @@ const userBaseSchema = new mongoose.Schema<IUserBase, Model<IUserBase>>({
     nitdaID: { type: String, required: [true, "nitdaID is required"] },
     deletedOn: { type: Date, default: Date.now },
     active: { type: Boolean, default: true },
-    department: { type: String, required: [true, "department is required"] },
+    department: { type: String, required: [true, "department is required"], enum: { values: ALL_DEPT, message: "Invalid Department" } },
     location: { type: String, required: [true, "location is required"] }
 
 

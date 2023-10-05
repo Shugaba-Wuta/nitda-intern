@@ -161,10 +161,10 @@ export const themeSettings = (mode: "dark" | "light") => {
             ...(mode === "dark"
                 ? {
                     primary: {
-                        main: colors.primary[500],
+                        main: colors.primary[100],
                     },
                     secondary: {
-                        main: colors.green[500]
+                        main: colors.green[300]
                     },
                     neutral: {
                         dark: colors.gray[700],
@@ -172,14 +172,14 @@ export const themeSettings = (mode: "dark" | "light") => {
                         light: colors.gray[100]
                     },
                     background: {
-                        default: "#000900",
+                        default: "#1F1F1F",
                     }
                 } : {
                     primary: {
                         main: colors.primary[100],
                     },
                     secondary: {
-                        main: colors.green[500]
+                        main: colors.green[300]
                     },
                     neutral: {
                         dark: colors.gray[700],
@@ -194,7 +194,7 @@ export const themeSettings = (mode: "dark" | "light") => {
         typography: {
 
             fontFamily: ["Montserrat", "-apple-system", "Roboto", "'Helvetica Neue'", "sans-serif"].join(","),
-            fontSize: 12,
+            fontSize: 14,
             h1: {
                 fontSize: 40,
             },

@@ -31,3 +31,5 @@ export const ADMIN_CREDENTIALS = {
     email: process.env?.ADMIN_EMAIL as string,
     password: process.env?.ADMIN_PASSWORD as string
 }
+
+export const PAYSTACK_AUTH_TOKEN = process.env?.PAYSTACK_AUTH_TOKEN as string

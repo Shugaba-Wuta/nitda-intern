@@ -8,6 +8,7 @@ import LoginPage from "@src/pages/login";
 import ErrorDisplay from "@components/AlertDisplay";
 import Error404 from "./pages/404";
 import Layout from "@components/page-layout/Layout";
+import Users from "@src/pages/create-user";
 
 
 function App() {
@@ -28,12 +29,17 @@ function App() {
 								<Route path="/admin" element={<div>ADMIN</div>} />
 								<Route path="/error" element={<Error404 />} />
 								<Route path="/"
-									element={
-										<Layout >
-											<div>Hello World</div>
+								>
+									<Route index element={
+										<Layout>
+											Home
 										</Layout>
-									}>
-									<Route  />
+									} />
+									<Route path="users" element={
+										<Layout>
+											<Users />
+										</Layout>
+									} />
 								</Route>
 								<Route path="/*" element={<Error404 />} />
 

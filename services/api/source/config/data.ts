@@ -1,14 +1,13 @@
 export const MAX_FILE_UPLOAD_IN_MB = 5
 export const ALLOWED_ORIGINS = [
-    "http://localhost:3000", "http://127.0.0.1:3000",
-]
+    "http://localhost:3000", "http://127.0.0.1:3000", "http://192.168.0.174:3000"]
 
 export const GENDERS = ["M", "F"]
 
 export const QUALIFICATION = ["BSc.", "MSc.", "BEng.", "MEng.", "BA", "PhD.", "HND", "LLB"]
 export const CLASS_OF_DEGREE = ["First Class", "Second Class Upper", "Second Class Lower", "Third Class", "Pass", "Distinction", "Upper Credit", "Lower Credit", "Merit", "Not Applicable"]
 
-export const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+export const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 export const INTERNSHIP_STATUS = ["Ongoing", "Done", "Aborted"]
 
@@ -34,9 +33,9 @@ export const INTERN_SCHEMA = USER_SCHEMA.filter(item => {
 
 
 // export const USER_ROLE_LEVEL3 = ["Associate"]
-export const USER_ROLE_LEVEL3 = [DEPARTMENT_ROLE,  HR_ROLE, NYSC_ROLE, SIWES_ROLE, INTERN_ROLE]
-export const USER_ROLE_LEVEL2 = [DEPARTMENT_ROLE,  HR_ROLE]
-export const USER_ROLE_LEVEL1 = [ HR_ROLE]
+export const USER_ROLE_LEVEL3 = [DEPARTMENT_ROLE, HR_ROLE, NYSC_ROLE, SIWES_ROLE, INTERN_ROLE]
+export const USER_ROLE_LEVEL2 = [DEPARTMENT_ROLE, HR_ROLE]
+export const USER_ROLE_LEVEL1 = [HR_ROLE]
 export const ASSOCIATE_SCHEMA = [NYSC_ROLE, SIWES_ROLE, INTERN_ROLE]
 //Permissions
 export const DEFAULT_PERMISSION = ["nysc:read", "siwes:read", "intern:read", "schedule:read"]

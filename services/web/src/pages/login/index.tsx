@@ -98,9 +98,11 @@ const Login = ({ title }: { title: string }) => {
         sx={{
           maxWidth: "1920px",
           minHeight: "fit-content",
+          // Glassmorphism effect
           background: "rgba(255, 255, 255, 0.5)",
           boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
           backdropFilter: "blur(4.1px)",
+
           borderRadius: "5px",
           padding: "30px",
           display: "flex",
